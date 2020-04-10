@@ -46,6 +46,6 @@ def test_simple_multi_mixed_nested_case():
 def test_simple_case_with_attribute():
     text = "<root attr='attr_value1'>1</root>"
     etree_element = ElementTree.fromstring(text)
-    expected_result = {'root': '1', '@attr': 'attr_value1'}
+    expected_result = {'root': {'#text': '1', '@attr': 'attr_value1'}}
     result = XmlToDict(etree_element).get_dict()
     assert result == expected_result, result
