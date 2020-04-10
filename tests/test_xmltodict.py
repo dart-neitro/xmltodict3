@@ -9,3 +9,12 @@ def test_simple_case():
     expected_result = {'root': '1'}
     result = XmlToDict(etree_element).get_dict()
     assert result == expected_result, result
+
+
+def test_simple_nested_case():
+    text = "<root><node>1</node></root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'node': '1'}}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
+
