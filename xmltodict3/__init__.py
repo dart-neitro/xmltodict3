@@ -10,7 +10,12 @@ class XmlToDict:
     def get_dict(self):
         tag = self.get_tag()
         if self.children_nodes:
-            value = self.get_children_data()
+            children_data = self.get_children_data()
+            attributes = self.get_attributes()
+            if attributes:
+                value = {**children_data, **attributes}
+            else:
+                value = children_data
         else:
             attributes = self.get_attributes()
             if attributes:
