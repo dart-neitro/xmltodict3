@@ -33,3 +33,19 @@ def test_simple_multi_same_nested_case():
     expected_result = {'root': {'node': ['1', '2']}}
     result = XmlToDict(etree_element).get_dict()
     assert result == expected_result, result
+
+
+def test_simple_multi_mixed_nested_case():
+    text = "<root><node>1</node><node1>33</node1><node>2</node></root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'node': ['1', '2'], 'node1': '33'}}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
+
+
+def test_simple_case_with_attribute():
+    text = "<root attr='attr_value1'>1</root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': '1', '@attr': 'attr_value1'}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
