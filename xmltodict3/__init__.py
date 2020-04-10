@@ -12,11 +12,23 @@ class XmlToDict:
         if self.children_nodes:
             value = self.get_children_data()
         else:
-            value = self.node.text
+            attributes = self.get_attributes()
+            if attributes:
+                value = attributes.copy()
+                value['#text'] = self.node.text
+            else:
+                value = self.node.text
         return {tag: value}
 
     def get_tag(self):
         return self.node.tag
+
+    def get_attributes(self):
+        attributes = dict()
+        for attribute_name in self.node.attrib:
+            key = '@' + attribute_name
+            attributes[key] = self.node.attrib[attribute_name]
+        return attributes
 
     def get_children_data(self):
         node_data = defaultdict(list)
