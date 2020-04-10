@@ -49,3 +49,23 @@ def test_simple_case_with_attribute():
     expected_result = {'root': {'#text': '1', '@attr': 'attr_value1'}}
     result = XmlToDict(etree_element).get_dict()
     assert result == expected_result, result
+
+
+def test_simple_case_with_attributes():
+    text = "<root attr='attr_value1' attr2='attr_value2'>1</root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'#text': '1',
+                                '@attr': 'attr_value1',
+                                '@attr2': 'attr_value2'}}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
+
+
+def test_nested_case_with_attributes():
+    text = "<root attr='attr_value1' attr2='attr_value2'><node>1</node></root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'node': '1',
+                                '@attr': 'attr_value1',
+                                '@attr2': 'attr_value2'}}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
