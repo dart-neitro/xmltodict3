@@ -41,5 +41,5 @@ jobs:
     - name: Coverage with pytest
       run: |
         pip install coverage
-        coverage run -m pytest; coverage report -m
+        coverage run -m pytest; coverage report --omit="tests/*" -m
 
