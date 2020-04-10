@@ -1,0 +1,1 @@
+Open source library which which is used for converting XML to a python dict.
