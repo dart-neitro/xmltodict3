@@ -1,11 +1,21 @@
 from collections import defaultdict
+import re
 import xml.etree.ElementTree as ElementTree
 
 
 class XmlToDict:
-    def __init__(self, node: ElementTree):
+    def __init__(self, node: ElementTree, ignore_namespace: bool = False):
         self.node = node
-        self.children_nodes = [XmlToDict(child_node) for child_node in node]
+        self.ignore_namespace = ignore_namespace
+        self.children_nodes = self.get_children_nodes()
+
+    def get_children_nodes(self):
+        children_nodes = []
+        for child_node in self.node:
+            xml_to_dict_node = XmlToDict(
+                child_node, ignore_namespace=self.ignore_namespace)
+            children_nodes.append(xml_to_dict_node)
+        return children_nodes
 
     def get_dict(self):
         tag = self.get_tag()
@@ -26,7 +36,10 @@ class XmlToDict:
         return {tag: value}
 
     def get_tag(self):
-        return self.node.tag
+        tag = self.node.tag
+        if self.ignore_namespace:
+            tag = re.sub(r'{[^}]+}', '', tag)
+        return tag
 
     def get_attributes(self):
         attributes = dict()
@@ -52,4 +65,3 @@ class XmlToDict:
             else:
                 grouped_data[tag] = sub_node_data
         return grouped_data
-
