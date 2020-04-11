@@ -56,7 +56,7 @@ class XmlToDict:
         node_data = self.group_children_data(node_data)
         return node_data
 
-    def group_children_data(self, children_data):
+    def group_children_data(self, children_data: defaultdict):
         grouped_data = dict()
         for tag in children_data:
             sub_node_data = children_data[tag]
