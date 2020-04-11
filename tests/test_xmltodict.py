@@ -105,6 +105,25 @@ def test_simple_case_with_namespace():
     text = '<root xmlns="http://test.com/test_shema">1</root>'
     etree_element = ElementTree.fromstring(text)
     expected_result = {'root': '1'}
-    result = XmlToDict(etree_element).get_dict()
+    result = XmlToDict(etree_element, ignore_namespace=True).get_dict()
     assert result == expected_result, result
 
+
+def test_multi_different_nested_case_with_namespace():
+    text = '<root xmlns="http://test.com/test_shema">' \
+           '<node1>1</node1><node2>2</node2></root>'
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'node1': '1', 'node2': '2'}}
+    result = XmlToDict(etree_element, ignore_namespace=True).get_dict()
+    assert result == expected_result, result
+
+
+def test_mixed_nested_case_with_attributes_with_namespace():
+    text = "<root attr=\"attr_val\" xmlns=\"http://test.com/test_shema\">" \
+           "<node attr='attr_value1' attr2='attr_value2'>1</node>" \
+           "<node>3</node></root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'@attr': 'attr_val', 'node': [{
+        '#text': '1', '@attr': 'attr_value1', '@attr2': 'attr_value2'}, '3']}}
+    result = XmlToDict(etree_element, ignore_namespace=True).get_dict()
+    assert result == expected_result, result
