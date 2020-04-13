@@ -65,3 +65,14 @@ class XmlToDict:
             else:
                 grouped_data[tag] = sub_node_data
         return grouped_data
+
+
+class XmlFileToDict:
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+
+    def get_dict(self):
+        tree_node = ElementTree.parse(self.file_path)
+        root_node = tree_node.getroot()
+        xml_to_dict_node = XmlToDict(root_node)
+        return xml_to_dict_node.get_dict()
