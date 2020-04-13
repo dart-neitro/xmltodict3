@@ -3,12 +3,7 @@ import os
 from xmltodict3 import XmlFileToDict
 
 
-def test_simple_case():
-    current_path = os.path.dirname(os.path.abspath(__file__))
-    sample_xml_file_path = os.path.join(
-        current_path, 'test_data/sample_food.xml')
-    result = XmlFileToDict(sample_xml_file_path).get_dict()
-    expected_result = {
+SAMPLE_FOOD_DICT = {
         'breakfast_menu': {
             'food': [{
                 'calories': '650',
@@ -51,4 +46,22 @@ def test_simple_case():
             }]
         }
     }
+
+
+def test_simple_case():
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    sample_xml_file_path = os.path.join(
+        current_path, 'test_data/sample_food.xml')
+    result = XmlFileToDict(sample_xml_file_path).get_dict()
+    expected_result = SAMPLE_FOOD_DICT
+    assert result == expected_result, result
+
+
+def test_simple_case_with_name_space():
+    current_path = os.path.dirname(os.path.abspath(__file__))
+    sample_xml_file_path = os.path.join(
+        current_path, 'test_data/sample_food_with_namespace.xml')
+    result = XmlFileToDict(
+        sample_xml_file_path, ignore_namespace=True).get_dict()
+    expected_result = SAMPLE_FOOD_DICT
     assert result == expected_result, result
