@@ -127,3 +127,20 @@ def test_mixed_nested_case_with_attributes_with_namespace():
         '#text': '1', '@attr': 'attr_value1', '@attr2': 'attr_value2'}, '3']}}
     result = XmlToDict(etree_element, ignore_namespace=True).get_dict()
     assert result == expected_result, result
+
+
+####
+def test_empty_element():
+    text = "<root><node>1</node><node /></root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'node': ['1', None]}}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
+
+
+def test_tag_with_hyphen():
+    text = "<root><node-n>1</node-n><node-n /></root>"
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'node-n': ['1', None]}}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
