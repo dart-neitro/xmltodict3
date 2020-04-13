@@ -19,6 +19,19 @@ def test_simple_nested_case():
     assert result == expected_result, result
 
 
+def test_simple_nested_case_with_spaces():
+    text = """
+    <root>
+        <node>
+            1
+        </node>
+    </root>"""
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'root': {'node': '1'}}
+    result = XmlToDict(etree_element).get_dict()
+    assert result == expected_result, result
+
+
 def test_simple_multi_different_nested_case():
     text = "<root><node1>1</node1><node2>2</node2></root>"
     etree_element = ElementTree.fromstring(text)
@@ -144,3 +157,18 @@ def test_tag_with_hyphen():
     expected_result = {'root': {'node-n': ['1', None]}}
     result = XmlToDict(etree_element).get_dict()
     assert result == expected_result, result
+
+
+def test_tag_with_schema():
+    text = """
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+        <xs:root type="integer">
+            data
+        </xs:root>
+    </xs:schema>"""
+    etree_element = ElementTree.fromstring(text)
+    expected_result = {'schema': {'root': {
+        '#text': 'data', '@type': 'integer'}}}
+    result = XmlToDict(etree_element, ignore_namespace=True).get_dict()
+    assert result == expected_result, result
+
