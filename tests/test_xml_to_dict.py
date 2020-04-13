@@ -171,4 +171,3 @@ def test_tag_with_schema():
         '#text': 'data', '@type': 'integer'}}}
     result = XmlToDict(etree_element, ignore_namespace=True).get_dict()
     assert result == expected_result, result
-

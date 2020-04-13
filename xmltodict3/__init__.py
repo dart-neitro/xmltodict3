@@ -1,6 +1,7 @@
 from collections import defaultdict
 import re
 import xml.etree.ElementTree as ElementTree
+from typing import Union
 
 
 class XmlToDict:
@@ -38,9 +39,15 @@ class XmlToDict:
         attributes = self.get_attributes()
         if attributes:
             value = attributes.copy()
-            value['#text'] = self.node.text
+            value['#text'] = self.get_value()
         else:
-            value = self.node.text
+            value = self.get_value()
+        return value
+
+    def get_value(self) -> Union[str, None]:
+        value = self.node.text
+        if value is not None:
+            value = value.strip()
         return value
 
     def get_dict_from_node_with_children(self):
