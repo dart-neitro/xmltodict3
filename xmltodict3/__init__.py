@@ -19,20 +19,10 @@ class XmlToDict:
 
     def get_dict(self):
         tag = self.get_tag()
-        if self.children_nodes:
-            children_data = self.get_children_data()
-            attributes = self.get_attributes()
-            if attributes:
-                value = {**children_data, **attributes}
-            else:
-                value = children_data
+        if self.is_single_node():
+            value = self.get_dict_from_single_node()
         else:
-            attributes = self.get_attributes()
-            if attributes:
-                value = attributes.copy()
-                value['#text'] = self.node.text
-            else:
-                value = self.node.text
+            value = self.get_dict_from_node_with_children()
         return {tag: value}
 
     def get_tag(self):
@@ -40,6 +30,27 @@ class XmlToDict:
         if self.ignore_namespace:
             tag = re.sub(r'{[^}]+}', '', tag)
         return tag
+
+    def is_single_node(self):
+        return True if not self.children_nodes else False
+
+    def get_dict_from_single_node(self):
+        attributes = self.get_attributes()
+        if attributes:
+            value = attributes.copy()
+            value['#text'] = self.node.text
+        else:
+            value = self.node.text
+        return value
+
+    def get_dict_from_node_with_children(self):
+        children_data = self.get_children_data()
+        attributes = self.get_attributes()
+        if attributes:
+            value = {**children_data, **attributes}
+        else:
+            value = children_data
+        return value
 
     def get_attributes(self):
         attributes = dict()
