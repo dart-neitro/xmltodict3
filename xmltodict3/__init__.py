@@ -79,11 +79,13 @@ class XmlToDict:
 
 
 class XmlFileToDict:
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, ignore_namespace: bool = False):
         self.file_path = file_path
+        self.ignore_namespace = ignore_namespace
 
     def get_dict(self):
         tree_node = ElementTree.parse(self.file_path)
         root_node = tree_node.getroot()
-        xml_to_dict_node = XmlToDict(root_node)
+        xml_to_dict_node = XmlToDict(
+            root_node, ignore_namespace=self.ignore_namespace)
         return xml_to_dict_node.get_dict()
