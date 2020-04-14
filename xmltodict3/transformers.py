@@ -24,14 +24,24 @@ class AbstractTransformer(ABC):
 
 
 class IntegerTransformer(AbstractTransformer):
-    """
-    Transformation for integer
-    """
     key = "integer"
 
     def transform_node(self, data_node: Dict):
         if self.check_data_node(data_node):
             data_node['#text'] = int(data_node['#text'])
             del data_node["@type"]
+        return data_node
 
+
+class BoolTransformer(AbstractTransformer):
+    key = "bool"
+
+    def transform_node(self, data_node: Dict):
+        if self.check_data_node(data_node):
+            value = data_node['#text'].lower()
+            if value == 'true':
+                data_node['#text'] = True
+            else:
+                data_node['#text'] = False
+            del data_node["@type"]
         return data_node
