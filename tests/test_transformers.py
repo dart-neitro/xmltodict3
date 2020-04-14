@@ -23,3 +23,35 @@ def test_integer_transformation_wrong_type():
     expected_result = {'@type': 'float', '#text': '1', '@attr': 'attr'}
     result = element.transform_node(node_data)
     assert result == expected_result, result
+
+
+def test_bool_transformation_true_1():
+    element = transformers.BoolTransformer()
+    node_data = {'@type': 'bool', '#text': 'true'}
+    expected_result = {'#text': True}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
+def test_bool_transformation_true_2():
+    element = transformers.BoolTransformer()
+    node_data = {'@type': 'bool', '#text': 'True'}
+    expected_result = {'#text': True}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
+def test_bool_transformation_false_1():
+    element = transformers.BoolTransformer()
+    node_data = {'@type': 'bool', '#text': 'false'}
+    expected_result = {'#text': False}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
+def test_bool_transformation_false_2():
+    element = transformers.BoolTransformer()
+    node_data = {'@type': 'bool', '#text': 'true1'}
+    expected_result = {'#text': False}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
