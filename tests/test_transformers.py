@@ -25,6 +25,14 @@ def test_integer_transformation_wrong_type():
     assert result == expected_result, result
 
 
+def test_integer_transformation_none():
+    element = transformers.IntegerTransformer()
+    node_data = {'@type': 'integer', '#text': None}
+    expected_result = {'#text': None}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
 def test_bool_transformation_true_1():
     element = transformers.BoolTransformer()
     node_data = {'@type': 'bool', '#text': 'true'}
@@ -52,6 +60,14 @@ def test_bool_transformation_false_1():
 def test_bool_transformation_false_2():
     element = transformers.BoolTransformer()
     node_data = {'@type': 'bool', '#text': 'true1'}
-    expected_result = {'#text': False}
+    expected_result = {'#text': None}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
+def test_bool_transformation_false_none():
+    element = transformers.BoolTransformer()
+    node_data = {'@type': 'bool', '#text': None}
+    expected_result = {'#text': None}
     result = element.transform_node(node_data)
     assert result == expected_result, result
