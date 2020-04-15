@@ -142,3 +142,25 @@ def test_pull_transformers():
 
     assert result == expected_result, result
 
+
+def test_pull_transformers_wrong_value():
+    transformer_list = transformers.DefaultTransformerList
+    pull_transformers = transformers.PullTransformers(*transformer_list)
+
+    node_data = {'@type': 'datetime', '#text': '2020-02-12 20:20:46Z'}
+    expected_result = {'#text': None}
+    result = pull_transformers.transform_node(node_data)
+
+    assert result == expected_result, result
+
+
+def test_pull_transformers_wrong_value():
+    transformer_list = transformers.DefaultTransformerList
+    pull_transformers = transformers.PullTransformers(*transformer_list)
+    pull_transformers.set_using_default_value(False)
+
+    node_data = {'@type': 'datetime', '#text': '2020-02-12 20:20:46Z'}
+
+    with pytest.raises(transformers.TransformerException):
+        pull_transformers.transform_node(node_data)
+
