@@ -50,6 +50,9 @@ class AbstractTransformer(ABC):
     def get_value_or_raise_exception(self, data_node: Dict):
         pass
 
+    def set_using_default_value(self, using_default_value: bool):
+        self.using_default_value = using_default_value
+
 
 class IntegerTransformer(AbstractTransformer):
     key = "integer"
@@ -115,6 +118,12 @@ class PullTransformers:
         if key in self.transformers:
             return self.transformers[key]
         return None
+
+    def set_using_default_value(self, using_default_value: bool):
+        for transformer_key in self.transformers:
+            self.transformers[transformer_key].set_using_default_value(
+                using_default_value
+            )
 
 
 DefaultTransformerList = [
