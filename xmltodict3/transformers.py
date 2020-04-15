@@ -78,8 +78,44 @@ class DateTimeTransformer(AbstractTransformer):
 
     def get_value_or_raise_exception(self, data_node: Dict):
         value = data_node['#text'].lower()
-        value = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+        value = datetime.datetime.strptime(value, self.datetime_format)
         return value
 
     def set_datetime_format(self, datetime_format: str):
         self.datetime_format = datetime_format
+
+
+class PullTransformers:
+    def __init__(self, *transformers):
+        self.transformers = dict()
+        self.add_transformers(*transformers)
+
+    def add_transformers(self, *transformers):
+        for transformer in transformers:
+            self.__register_transformer(transformer)
+
+    def __register_transformer(self, transformer: AbstractTransformer):
+        if issubclass(transformer.__class__, AbstractTransformer):
+            self.transformers[transformer.key] = transformer
+
+    def transform_node(self, data_node: Dict):
+        key = self.get_key(data_node)
+        if key is not None:
+            transformer = self.get_transformer(key)
+            if transformer is not None:
+                return transformer.transform_node(data_node)
+        return data_node
+
+    @staticmethod
+    def get_key(data_node: Dict):
+        if '@type' in data_node:
+            return data_node['@type']
+
+    def get_transformer(self, key):
+        if key in self.transformers:
+            return self.transformers[key]
+        return None
+
+
+DefaultTransformerList = [
+    IntegerTransformer(), BoolTransformer(), DateTimeTransformer()]
