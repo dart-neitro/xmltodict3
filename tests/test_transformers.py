@@ -114,8 +114,31 @@ def test_datetime_transformation_none():
 
 def test_datetime_transformation_custom_datetime_format():
     element = transformers.DateTimeTransformer()
-    element.set_datetime_format("%Y-%m-%dT%H:%M:%SZ")
+    element.set_datetime_format("%Y-%m-%d %H:%M:%S")
     node_data = {'@type': 'datetime', '#text': '2020-02-12 20:20:46'}
-    expected_result = {'#text': None}
+    expected_result = {'#text': datetime.datetime(2020, 2, 12, 20, 20, 46)}
     result = element.transform_node(node_data)
     assert result == expected_result, result
+
+
+def test_pull_transformers_no_transformer():
+    transformer_list = transformers.DefaultTransformerList
+    pull_transformers = transformers.PullTransformers(*transformer_list)
+
+    node_data = {'@type': 'fake_type', '#text': 'bla-bla-bla'}
+    expected_result = node_data
+    result = pull_transformers.transform_node(node_data)
+
+    assert result == expected_result, result
+
+
+def test_pull_transformers():
+    transformer_list = transformers.DefaultTransformerList
+    pull_transformers = transformers.PullTransformers(*transformer_list)
+
+    node_data = {'@type': 'datetime', '#text': '2020-02-12T20:20:46Z'}
+    expected_result = {'#text': datetime.datetime(2020, 2, 12, 20, 20, 46)}
+    result = pull_transformers.transform_node(node_data)
+
+    assert result == expected_result, result
+
