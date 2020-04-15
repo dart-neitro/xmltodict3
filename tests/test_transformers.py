@@ -1,3 +1,7 @@
+import datetime
+
+import pytest
+
 import xmltodict3.transformers as transformers
 
 
@@ -29,6 +33,25 @@ def test_integer_transformation_none():
     element = transformers.IntegerTransformer()
     node_data = {'@type': 'integer', '#text': None}
     expected_result = {'#text': None}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
+def test_integer_transformation_with_exception():
+    element = transformers.IntegerTransformer(using_default_value=False)
+    node_data = {'@type': 'integer', '#text': None}
+    with pytest.raises(transformers.TransformerException):
+        element.transform_node(node_data)
+
+    node_data = {'@type': 'integer', '#text': 'None'}
+    with pytest.raises(transformers.TransformerException):
+        element.transform_node(node_data)
+
+
+def test_integer_transformation_without_text():
+    element = transformers.IntegerTransformer()
+    node_data = {'@type': 'integer'}
+    expected_result = {'@type': 'integer'}
     result = element.transform_node(node_data)
     assert result == expected_result, result
 
