@@ -70,3 +70,16 @@ class BoolTransformer(AbstractTransformer):
         else:
             raise TypeError('Value has to be "true" or "false"')
         return value
+
+
+class DateTimeTransformer(AbstractTransformer):
+    key = "datetime"
+    datetime_format = "%Y-%m-%dT%H:%M:%SZ"
+
+    def get_value_or_raise_exception(self, data_node: Dict):
+        value = data_node['#text'].lower()
+        value = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+        return value
+
+    def set_datetime_format(self, datetime_format: str):
+        self.datetime_format = datetime_format
