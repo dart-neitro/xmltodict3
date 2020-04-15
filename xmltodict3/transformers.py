@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import datetime
 from typing import Dict
 
 
@@ -11,8 +12,10 @@ class AbstractTransformer(ABC):
     transformation for data node
     """
     key = None
-    default_value = None
-    using_default_value = True
+
+    def __init__(self, default_value=None, using_default_value: bool = True):
+        self.default_value = default_value
+        self.using_default_value = using_default_value
 
     def transform_node(self, data_node: Dict):
         if self.check_data_node(data_node):
@@ -30,9 +33,6 @@ class AbstractTransformer(ABC):
             return False
         return True
 
-    def get_key(self):
-        return self.key
-
     def get_safe_value(self, data_node: Dict):
         try:
             value = self.get_value(data_node)
@@ -42,26 +42,26 @@ class AbstractTransformer(ABC):
 
     def get_value(self, data_node: Dict):
         try:
-            return self._get_value(data_node)
+            return self.get_value_or_raise_exception(data_node)
         except Exception as e:
             raise TransformerException(str(e))
 
     @abstractmethod
-    def _get_value(self, data_node: Dict):
+    def get_value_or_raise_exception(self, data_node: Dict):
         pass
 
 
 class IntegerTransformer(AbstractTransformer):
     key = "integer"
 
-    def _get_value(self, data_node: Dict):
+    def get_value_or_raise_exception(self, data_node: Dict):
         return int(data_node['#text'])
 
 
 class BoolTransformer(AbstractTransformer):
     key = "bool"
 
-    def _get_value(self, data_node: Dict):
+    def get_value_or_raise_exception(self, data_node: Dict):
         value = data_node['#text'].lower()
         if value == 'true':
             value = True
