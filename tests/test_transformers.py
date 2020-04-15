@@ -94,3 +94,28 @@ def test_bool_transformation_false_none():
     expected_result = {'#text': None}
     result = element.transform_node(node_data)
     assert result == expected_result, result
+
+
+def test_datetime_transformation():
+    element = transformers.DateTimeTransformer()
+    node_data = {'@type': 'datetime', '#text': '2020-02-12T20:20:46Z'}
+    expected_result = {'#text': datetime.datetime(2020, 2, 12, 20, 20, 46)}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
+def test_datetime_transformation_none():
+    element = transformers.DateTimeTransformer()
+    node_data = {'@type': 'datetime', '#text': '2020-02-12 20:20:46'}
+    expected_result = {'#text': None}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
+
+
+def test_datetime_transformation_custom_datetime_format():
+    element = transformers.DateTimeTransformer()
+    element.set_datetime_format("%Y-%m-%dT%H:%M:%SZ")
+    node_data = {'@type': 'datetime', '#text': '2020-02-12 20:20:46'}
+    expected_result = {'#text': None}
+    result = element.transform_node(node_data)
+    assert result == expected_result, result
