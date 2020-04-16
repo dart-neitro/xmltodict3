@@ -1,0 +1,2 @@
+class TransformerException(Exception):
+    pass

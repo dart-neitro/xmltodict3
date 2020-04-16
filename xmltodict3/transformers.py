@@ -2,9 +2,7 @@ from abc import ABC, abstractmethod
 import datetime
 from typing import Dict
 
-
-class TransformerException(Exception):
-    pass
+from xmltodict3.exceptions import TransformerException
 
 
 class AbstractTransformer(ABC):
