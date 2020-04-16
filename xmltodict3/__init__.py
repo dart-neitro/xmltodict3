@@ -1,25 +1,20 @@
 from collections import defaultdict
 import re
 import xml.etree.ElementTree as ElementTree
-from typing import Union
+from typing import Union, Dict
 
 
 class XmlToDict:
+    __pull_transformers = None
+
     def __init__(self, node: ElementTree, ignore_namespace: bool = False):
         self.node = node
         self.ignore_namespace = ignore_namespace
-        self.children_nodes = self.get_children_nodes()
-
-    def get_children_nodes(self):
-        children_nodes = []
-        for child_node in self.node:
-            xml_to_dict_node = XmlToDict(
-                child_node, ignore_namespace=self.ignore_namespace)
-            children_nodes.append(xml_to_dict_node)
-        return children_nodes
+        self.children_nodes = []
 
     def get_dict(self):
         tag = self.get_tag()
+        self.children_nodes = self.get_children_nodes()
         if self.is_single_node():
             value = self.get_dict_from_single_node()
         else:
@@ -32,6 +27,17 @@ class XmlToDict:
             tag = re.sub(r'{[^}]+}', '', tag)
         return tag
 
+    def get_children_nodes(self):
+        children_nodes = []
+        for child_node in self.node:
+            xml_to_dict_node = XmlToDict(
+                child_node, ignore_namespace=self.ignore_namespace)
+            if self.__pull_transformers is not None:
+                xml_to_dict_node.use_pull_transformers(
+                    self.__pull_transformers)
+            children_nodes.append(xml_to_dict_node)
+        return children_nodes
+
     def is_single_node(self):
         return True if not self.children_nodes else False
 
@@ -41,7 +47,9 @@ class XmlToDict:
             value = attributes.copy()
             value['#text'] = self.get_value()
         else:
-            value = self.get_value()
+            value = {'#text': self.get_value()}
+        value = self.transform_node(value)
+        value = self.group_simple_node_data(value)
         return value
 
     def get_value(self) -> Union[str, None]:
@@ -49,6 +57,16 @@ class XmlToDict:
         if value is not None:
             value = value.strip()
         return value
+
+    def transform_node(self, node_data: Dict):
+        if self.__pull_transformers is not None:
+            node_data = self.__pull_transformers.transform_node(node_data)
+        return node_data
+
+    def group_simple_node_data(self, node_data: Dict):
+        if tuple(node_data.keys()) == ('#text',):
+            node_data = node_data['#text']
+        return node_data
 
     def get_dict_from_node_with_children(self):
         children_data = self.get_children_data()
@@ -83,6 +101,9 @@ class XmlToDict:
             else:
                 grouped_data[tag] = sub_node_data
         return grouped_data
+
+    def use_pull_transformers(self, pull_transformers):
+        self.__pull_transformers = pull_transformers
 
 
 class XmlFileToDict:
