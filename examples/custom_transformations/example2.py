@@ -65,9 +65,9 @@ transformer_list = DefaultTransformerList + custom_transformer_list
 pull_transformers = PullTransformers(*transformer_list)
 
 etree_element = ElementTree.fromstring(text)
-xmt_to_dict = XmlToDict(etree_element)
-xmt_to_dict.use_pull_transformers(pull_transformers)
+xml_to_dict = XmlToDict(etree_element)
+xml_to_dict.use_pull_transformers(pull_transformers)
 
-result = xmt_to_dict.get_dict()
+result = xml_to_dict.get_dict()
 
 assert result == expected_result, result

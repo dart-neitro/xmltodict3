@@ -1,57 +1,54 @@
 import datetime
-import xml.etree.ElementTree as ElementTree
 
-from xmltodict3 import XmlToDict
+from xmltodict3 import XmlTextToDict
 import xmltodict3.transformers as transformers
 
 
-def test_xml_to_dict_with_default_transformers_simple_case():
+def test_xml_text_to_dict_with_default_transformers_simple_case():
     text = """
 
     <int_value type="integer">
-        111
+        222
     </int_value>
 
     """
-    expected_result = {'int_value': 111}
+    expected_result = {'int_value': 222}
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
 
-    etree_element = ElementTree.fromstring(text)
-    xmt_to_dict = XmlToDict(etree_element)
-    xmt_to_dict.use_pull_transformers(pull_transformers)
+    xml_to_dict = XmlTextToDict(text)
+    xml_to_dict.use_pull_transformers(pull_transformers)
 
-    result = xmt_to_dict.get_dict()
+    result = xml_to_dict.get_dict()
 
     assert result == expected_result, result
 
 
-def test_xml_to_dict_with_default_transformers():
+def test_xml_text_to_dict_with_default_transformers():
     text = """
     <root>
         <values>
             <int_value type="integer">
-                111
+                123
             </int_value>
         </values>
     </root>
     """
-    expected_result = {'root': {'values': {'int_value': 111}}}
+    expected_result = {'root': {'values': {'int_value': 123}}}
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
 
-    etree_element = ElementTree.fromstring(text)
-    xmt_to_dict = XmlToDict(etree_element)
-    xmt_to_dict.use_pull_transformers(pull_transformers)
+    xml_to_dict = XmlTextToDict(text)
+    xml_to_dict.use_pull_transformers(pull_transformers)
 
-    result = xmt_to_dict.get_dict()
+    result = xml_to_dict.get_dict()
 
     assert result == expected_result, result
 
 
-def test_xml_to_dict_with_default_transformers_2():
+def test_xml_text_to_dict_with_default_transformers_2():
     text = """
     <root>
         <values>
@@ -68,7 +65,7 @@ def test_xml_to_dict_with_default_transformers_2():
                 clear_value
             </clear_value>
             <timestamp type="datetime">
-                2020-02-12T20:20:46Z
+                2021-02-12T20:20:46Z
             </timestamp>
             <tag_with_not_implemented_type type="not_implemented_type">
                 value
@@ -80,7 +77,7 @@ def test_xml_to_dict_with_default_transformers_2():
     expected_result = {'root': {'values': {
         'int_value': 42, 'bool_value': True,
         'bool_value2': False, 'clear_value': 'clear_value',
-        'timestamp': datetime.datetime(2020, 2, 12, 20, 20, 46),
+        'timestamp': datetime.datetime(2021, 2, 12, 20, 20, 46),
         'tag_with_not_implemented_type': {
             '#text': 'value', '@type': 'not_implemented_type'},
         'empty_tag': {
@@ -90,10 +87,9 @@ def test_xml_to_dict_with_default_transformers_2():
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
 
-    etree_element = ElementTree.fromstring(text)
-    xmt_to_dict = XmlToDict(etree_element)
-    xmt_to_dict.use_pull_transformers(pull_transformers)
+    xml_to_dict = XmlTextToDict(text)
+    xml_to_dict.use_pull_transformers(pull_transformers)
 
-    result = xmt_to_dict.get_dict()
+    result = xml_to_dict.get_dict()
 
     assert result == expected_result, result
