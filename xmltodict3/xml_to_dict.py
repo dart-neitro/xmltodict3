@@ -123,9 +123,17 @@ class XmlTextToDict:
     def __init__(self, xml_text: str, ignore_namespace: bool = False):
         self.xml_text = xml_text
         self.ignore_namespace = ignore_namespace
+        self.__pull_transformers = None
 
     def get_dict(self):
         root_node = ElementTree.fromstring(self.xml_text)
         xml_to_dict_node = XmlToDict(
             root_node, ignore_namespace=self.ignore_namespace)
+        if self.__pull_transformers is not None:
+            xml_to_dict_node.use_pull_transformers(
+                self.__pull_transformers)
         return xml_to_dict_node.get_dict()
+
+    def use_pull_transformers(self, pull_transformers):
+        self.__pull_transformers = pull_transformers
+
