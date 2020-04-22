@@ -13,7 +13,7 @@ def test_xml_to_dict_with_default_transformers_simple_case():
     </int_value>
 
     """
-    expected_result = {'int_value': 111}
+    expected_result = {'int_value': {'#text': 111, '@type': "integer"}}
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
@@ -41,6 +41,7 @@ def test_xml_to_dict_with_default_transformers():
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
+    pull_transformers.set_removing_types(True)
 
     etree_element = ElementTree.fromstring(text)
     xml_to_dict = XmlToDict(etree_element)
@@ -89,6 +90,7 @@ def test_xml_to_dict_with_default_transformers_2():
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
+    pull_transformers.set_removing_types(True)
 
     etree_element = ElementTree.fromstring(text)
     xml_to_dict = XmlToDict(etree_element)

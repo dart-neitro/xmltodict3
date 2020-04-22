@@ -71,8 +71,9 @@ def test_xml_file_with_pull_transformers():
         current_path, 'test_data/sample_food_with_types.xml')
 
     transformer_list = transformers.DefaultTransformerList
-    transformer_list += [PriceTransformer()]
+    transformer_list += [PriceTransformer]
     pull_transformers = transformers.PullTransformers(*transformer_list)
+    pull_transformers.set_removing_types(True)
 
     xml_to_dict = XmlFileToDict(sample_xml_file_path)
     xml_to_dict.use_pull_transformers(pull_transformers)

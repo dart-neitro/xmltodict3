@@ -16,6 +16,7 @@ def test_xml_text_to_dict_with_default_transformers_simple_case():
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
+    pull_transformers.set_removing_types(True)
 
     xml_to_dict = XmlTextToDict(text)
     xml_to_dict.use_pull_transformers(pull_transformers)
@@ -39,6 +40,7 @@ def test_xml_text_to_dict_with_default_transformers():
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
+    pull_transformers.set_removing_types(True)
 
     xml_to_dict = XmlTextToDict(text)
     xml_to_dict.use_pull_transformers(pull_transformers)
@@ -86,6 +88,7 @@ def test_xml_text_to_dict_with_default_transformers_2():
 
     transformer_list = transformers.DefaultTransformerList
     pull_transformers = transformers.PullTransformers(*transformer_list)
+    pull_transformers.set_removing_types(True)
 
     xml_to_dict = XmlTextToDict(text)
     xml_to_dict.use_pull_transformers(pull_transformers)
