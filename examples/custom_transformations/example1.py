@@ -27,7 +27,7 @@ text = """
 
 expected_result = {'tag_decimal': Decimal(1500.00)}
 
-custom_transformer_list = [DecimalTransformer()]
+custom_transformer_list = [DecimalTransformer(removing_types=True)]
 pull_transformers = PullTransformers(*custom_transformer_list)
 
 etree_element = ElementTree.fromstring(text)

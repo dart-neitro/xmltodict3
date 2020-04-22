@@ -60,9 +60,10 @@ expected_result = {'root': {'values': {
     'tag_decimal': Decimal(1500.00)
 }}}
 
-custom_transformer_list = [DecimalTransformer()]
+custom_transformer_list = [DecimalTransformer]
 transformer_list = DefaultTransformerList + custom_transformer_list
 pull_transformers = PullTransformers(*transformer_list)
+pull_transformers.set_removing_types(True)
 
 etree_element = ElementTree.fromstring(text)
 xml_to_dict = XmlToDict(etree_element)
