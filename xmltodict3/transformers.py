@@ -11,17 +11,18 @@ class AbstractTransformer(ABC):
     """
     key = None
 
-    def __init__(self, default_value=None, using_default_value: bool = True):
-        self.default_value = default_value
-        self.using_default_value = using_default_value
+    def __init__(self, ignore_errors: bool = False,
+                 removing_types: bool = False):
+        self.ignore_errors = ignore_errors
+        self.removing_types = removing_types
 
     def transform_node(self, node_data: Dict):
         if self.check_node_data(node_data):
-            if self.using_default_value:
+            if self.ignore_errors:
                 node_data['#text'] = self.get_safe_value(node_data)
             else:
                 node_data['#text'] = self.get_value(node_data)
-            del node_data["@type"]
+            node_data = self.remove_type_from_node_data(node_data)
         return node_data
 
     def check_node_data(self, node_data: Dict):
@@ -35,7 +36,7 @@ class AbstractTransformer(ABC):
         try:
             value = self.get_value(node_data)
         except TransformerException:
-            value = self.default_value
+            value = node_data.get("#text")
         return value
 
     def get_value(self, node_data: Dict):
@@ -48,8 +49,16 @@ class AbstractTransformer(ABC):
     def get_value_or_raise_exception(self, node_data: Dict):
         pass
 
-    def set_using_default_value(self, using_default_value: bool):
-        self.using_default_value = using_default_value
+    def remove_type_from_node_data(self, node_data: Dict):
+        if self.removing_types:
+            del node_data["@type"]
+        return node_data
+
+    def set_ignore_errors(self, ignore_errors: bool):
+        self.ignore_errors = ignore_errors
+
+    def set_removing_types(self, removing_types: bool):
+        self.removing_types = removing_types
 
 
 class IntegerTransformer(AbstractTransformer):
@@ -96,8 +105,15 @@ class PullTransformers:
             self.__register_transformer(transformer)
 
     def __register_transformer(self, transformer: AbstractTransformer):
-        if issubclass(transformer.__class__, AbstractTransformer):
-            self.transformers[transformer.key] = transformer
+        transformer_instance = self.__get_transformer_instance(transformer)
+        if issubclass(transformer_instance.__class__, AbstractTransformer):
+            self.transformers[transformer_instance.key] = transformer_instance
+
+    @staticmethod
+    def __get_transformer_instance(transformer: AbstractTransformer):
+        if issubclass(transformer.__class__, type):
+            return transformer()
+        return transformer
 
     def transform_node(self, node_data: Dict):
         key = self.get_key(node_data)
@@ -117,12 +133,18 @@ class PullTransformers:
             return self.transformers[key]
         return None
 
-    def set_using_default_value(self, using_default_value: bool):
+    def set_ignore_errors(self, ignore_errors: bool):
         for transformer_key in self.transformers:
-            self.transformers[transformer_key].set_using_default_value(
-                using_default_value
+            self.transformers[transformer_key].set_ignore_errors(
+                ignore_errors
+            )
+
+    def set_removing_types(self, removing_types: bool):
+        for transformer_key in self.transformers:
+            self.transformers[transformer_key].set_removing_types(
+                removing_types
             )
 
 
 DefaultTransformerList = [
-    IntegerTransformer(), BoolTransformer(), DateTimeTransformer()]
+    IntegerTransformer, BoolTransformer, DateTimeTransformer]
