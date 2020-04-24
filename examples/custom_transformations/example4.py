@@ -48,8 +48,9 @@ class PriceTransformer(AbstractTransformer):
         pattern_match = re.match(pattern, value)
         if not pattern_match:
             raise TypeError(
-                f'The value <{repr(value)}> '
-                f'has not matched with pattern <{pattern}>')
+                'The value <{0}> has not matched with pattern <{1}>'.format(
+                    repr(value), pattern)
+            )
         value = pattern_match.group(1)
         return Decimal(value)
 
@@ -63,8 +64,9 @@ class DiscountTransformer(AbstractTransformer):
         pattern_match = re.match(pattern, value)
         if not pattern_match:
             raise TypeError(
-                f'The value <{repr(value)}> '
-                f'has not matched with pattern <{pattern}>')
+                'The value <{0}> has not matched with pattern <{1}>'.format(
+                    repr(value), pattern)
+            )
         value = pattern_match.group(1)
         return Decimal(value)
 
