@@ -9,14 +9,14 @@ Example 1 (Simple case):
     >>> from xmltodict3 import XmlTextToDict
     >>> text = """
     ...     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    ...         <xs:root type="integer">
+    ...         <xs:root attr="attr_value">
     ...             data
     ...         </xs:root>
     ...     </xs:schema>
     ... """
     >>> result = XmlTextToDict(text, ignore_namespace=True).get_dict()
     >>> print(result)
-    {'schema': {'root': {'@type': 'integer', '#text': 'data'}}}
+    {'schema': {'root': {'@attr': 'attr_value', '#text': 'data'}}}
 
 Example 2 (with transformers):
 ---------
