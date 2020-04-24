@@ -43,7 +43,7 @@ class AbstractTransformer(ABC):
         try:
             return self.get_value_or_raise_exception(node_data)
         except Exception as e:
-            raise TransformerException(str(e))
+            raise TransformerException(f'{self.__class__}: {str(e)}')
 
     @abstractmethod
     def get_value_or_raise_exception(self, node_data: Dict):
