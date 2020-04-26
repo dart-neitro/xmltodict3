@@ -1,3 +1,7 @@
+"""
+Classes to work with transformation data
+during transformation from XML to python dictionary
+"""
 from abc import ABC, abstractmethod
 import datetime
 from typing import Dict, Any, Optional, Union
@@ -6,9 +10,7 @@ from xmltodict3.exceptions import TransformerException
 
 
 class AbstractTransformer(ABC):
-    """
-    transformation for data node
-    """
+    """Abstract class for implementation transformers"""
     key = None
 
     def __init__(self, ignore_errors: bool = False,
