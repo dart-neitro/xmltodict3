@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 
 from xmltodict3.exceptions import TransformerException
 
@@ -109,14 +109,16 @@ class PullTransformers:
         for transformer in transformers:
             self.__register_transformer(transformer)
 
-    def __register_transformer(self, transformer: AbstractTransformer) -> None:
+    def __register_transformer(
+            self, transformer: Union[AbstractTransformer, type]) -> None:
         transformer_instance = self.__get_transformer_instance(transformer)
         if issubclass(transformer_instance.__class__, AbstractTransformer):
             self.transformers[transformer_instance.key] = transformer_instance
 
     @staticmethod
     def __get_transformer_instance(
-            transformer: AbstractTransformer) -> AbstractTransformer:
+            transformer: Union[AbstractTransformer, type]
+            ) -> AbstractTransformer:
         if issubclass(transformer.__class__, type):
             return transformer()
         return transformer
