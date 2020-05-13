@@ -1,8 +1,18 @@
+![pypi](https://img.shields.io/pypi/v/xmltodict3.svg)
+
 An open-source library that is used for converting XML to a python dictionary.
 
 This library:
-* work with namespace
+* can work with namespace
 * can transform XML value into python object (integer, boolean, datetime & custom transformers) using the "type" attribute
+
+Installation:
+-------
+>  pip install xmltodict3
+
+or
+> pip install git+https://github.com/dart-neitro/xmltodict3
+
 
 Example 1 (Simple case):
 -------
