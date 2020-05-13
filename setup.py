@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='xmltodict3',
-    version='0.0.3',
+    version='0.0.4',
     description='An open-source library that is used '
                 'for converting XML to a python dictionary.',
     long_description=long_description,
