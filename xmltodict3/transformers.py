@@ -114,14 +114,14 @@ class PullTransformers:
     def __register_transformer(
             self, transformer: Union[AbstractTransformer, type]) -> None:
         transformer_instance = self.__get_transformer_instance(transformer)
-        if issubclass(transformer_instance.__class__, AbstractTransformer):
+        if isinstance(transformer_instance, AbstractTransformer):
             self.transformers[transformer_instance.key] = transformer_instance
 
     @staticmethod
     def __get_transformer_instance(
             transformer: Union[AbstractTransformer, type]
             ) -> AbstractTransformer:
-        if issubclass(transformer.__class__, type):
+        if isinstance(transformer, type):
             return transformer()
         return transformer
 
